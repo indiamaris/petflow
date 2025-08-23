@@ -11,6 +11,7 @@ import './FlowCanvas.css';
 import CustomNode from './CustomNode';
 import { FLOW_CONFIG } from '../config/flow-config';
 import AnimalDetailsPanel from './AnimalDetailsPanel';
+import ContextMenu from './ContextMenu';
 
 const nodeTypes = {
   custom: CustomNode
@@ -21,6 +22,7 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
   const [edges, setEdges] = useState(initialEdges);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [isDetailsPanelOpen, setIsDetailsPanelOpen] = useState(false);
+  const [contextMenu, setContextMenu] = useState({ show: false, position: null, sourceNode: null });
   const reactFlowWrapper = useRef(null);
 
   const onNodesChange = useCallback((changes) => {
@@ -78,6 +80,24 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
     }
   }, [onGranjaClick]);
 
+  const onNodeContextMenu = useCallback((event, node) => {
+    event.preventDefault();
+    setContextMenu({
+      show: true,
+      position: { x: event.clientX, y: event.clientY },
+      sourceNode: node
+    });
+  }, []);
+
+  const onPaneContextMenu = useCallback((event) => {
+    event.preventDefault();
+    setContextMenu({
+      show: true,
+      position: { x: event.clientX, y: event.clientY },
+      sourceNode: null
+    });
+  }, []);
+
   // Atualizar o estado global quando os nós ou edges mudarem
   useEffect(() => {
     onUpdate(nodes, edges);
@@ -113,6 +133,92 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
     setSelectedAnimal(null);
   }, []);
 
+  const handleCloseContextMenu = useCallback(() => {
+    setContextMenu({ show: false, position: null, sourceNode: null });
+  }, []);
+
+  const handleCreateArtifact = useCallback((artifactType, position) => {
+    const newNodeId = `${artifactType.id}-${Date.now()}`;
+    
+    // Gerar nome único para animais
+    let animalName = artifactType.label;
+    if (artifactType.type === 'animal') {
+      const randomIndex = Math.floor(Math.random() * 24);
+      const names = ['Buddy', 'Max', 'Luna', 'Rocky', 'Bella', 'Charlie', 'Lucy', 'Cooper', 'Daisy', 'Bear', 'Molly', 'Duke', 'Sophie', 'Jack', 'Ruby', 'Oliver', 'Chloe', 'Tucker', 'Penny', 'Winston', 'Lola', 'Murphy', 'Zoe', 'Finn'];
+      animalName = names[randomIndex];
+    }
+    
+    // Calcular posição do novo nó baseada no nó de origem
+    let newNodePosition;
+    if (contextMenu.sourceNode) {
+      const sourcePos = contextMenu.sourceNode.position;
+      newNodePosition = {
+        x: sourcePos.x + 200, // 200px à direita do nó de origem
+        y: sourcePos.y + 100  // 100px abaixo do nó de origem
+      };
+    } else {
+      // Se não houver nó de origem, usar a posição do clique
+      newNodePosition = { x: position.x - 100, y: position.y - 50 };
+    }
+    
+    const newNode = {
+      id: newNodeId,
+      type: 'custom',
+      position: newNodePosition,
+      data: {
+        ...artifactType,
+        animalName: artifactType.type === 'animal' ? animalName : artifactType.label,
+        apelido: '',
+        peso: '',
+        idade: '',
+        responsavel: ''
+      }
+    };
+
+    // Criar uma nova conexão se houver um nó de origem
+    let newEdge = null;
+    if (contextMenu.sourceNode) {
+      const edgeId = `${contextMenu.sourceNode.id}-${newNodeId}`;
+      newEdge = {
+        id: edgeId,
+        source: contextMenu.sourceNode.id,
+        target: newNodeId,
+        type: 'smoothstep',
+        animated: false,
+        style: { 
+          stroke: contextMenu.sourceNode.data.color || '#666', 
+          strokeWidth: 3,
+          strokeDasharray: '5,5' // Linha tracejada para destacar
+        },
+        label: 'Novo', // Label para identificar a conexão
+        labelStyle: {
+          fill: contextMenu.sourceNode.data.color || '#666',
+          fontWeight: 'bold',
+          fontSize: '12px'
+        }
+      };
+    }
+
+    // Adicionar o novo nó e edge
+    setNodes(prevNodes => [...prevNodes, newNode]);
+    if (newEdge) {
+      setEdges(prevEdges => [...prevEdges, newEdge]);
+    }
+    
+    // Atualizar o estado global
+    if (onUpdate) {
+      const updatedNodes = [...nodes, newNode];
+      const updatedEdges = newEdge ? [...edges, newEdge] : edges;
+      onUpdate(updatedNodes, updatedEdges);
+    }
+    
+    // Se for um animal, abrir automaticamente o painel de detalhes
+    if (artifactType.type === 'animal') {
+      setSelectedAnimal(newNode);
+      setIsDetailsPanelOpen(true);
+    }
+  }, [nodes, edges, onUpdate, contextMenu.sourceNode]);
+
   return (
     <div className="flow-canvas" ref={reactFlowWrapper}>
       <ReactFlow
@@ -122,6 +228,8 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeClick={onNodeClick}
+        onNodeContextMenu={onNodeContextMenu}
+        onPaneContextMenu={onPaneContextMenu}
         nodeTypes={nodeTypes}
         {...FLOW_CONFIG}
         attributionPosition="bottom-left"
@@ -148,6 +256,13 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
         isOpen={isDetailsPanelOpen}
         onClose={handleCloseDetailsPanel}
         onSave={handleSaveAnimal}
+      />
+      
+      <ContextMenu
+        position={contextMenu.position}
+        onClose={handleCloseContextMenu}
+        onCreateArtifact={handleCreateArtifact}
+        sourceNode={contextMenu.sourceNode}
       />
     </div>
   );

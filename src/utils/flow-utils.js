@@ -117,6 +117,13 @@ const ARTIFACTS_CONFIG = [
   }
 ];
 
+// Nomes únicos para novos animais
+const ANIMAL_NAMES = [
+  'Buddy', 'Max', 'Luna', 'Rocky', 'Bella', 'Charlie', 'Lucy', 'Cooper',
+  'Daisy', 'Bear', 'Molly', 'Duke', 'Sophie', 'Jack', 'Ruby', 'Oliver',
+  'Chloe', 'Tucker', 'Penny', 'Winston', 'Lola', 'Murphy', 'Zoe', 'Finn'
+];
+
 // Configuração para granjas específicas (sub-canvases)
 const GRANJA_CONFIGS = {
   '1': [

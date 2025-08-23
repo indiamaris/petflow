@@ -2,7 +2,7 @@ import React from 'react';
 import { Handle } from '@xyflow/react';
 import './CustomNode.css';
 
-const CustomNode = ({ data, selected }) => {
+const CustomNode = ({ data, selected, id }) => {
   const { label, type, animalName, color, shape } = data;
   
   const getShapeStyle = () => {
