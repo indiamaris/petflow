@@ -13,6 +13,10 @@ const ARTIFACTS_CONFIG = [
     type: 'animal',
     label: 'Cachorro',
     animalName: 'Rex',
+    apelido: 'Rexinho',
+    peso: '15.5',
+    idade: '3',
+    responsavel: 'India',
     color: '#4ecdc4',
     shape: 'circle',
     position: { x: 200, y: 250 }
@@ -22,6 +26,10 @@ const ARTIFACTS_CONFIG = [
     type: 'animal',
     label: 'Gato',
     animalName: 'Mia',
+    apelido: 'Miauzinho',
+    peso: '4.2',
+    idade: '2',
+    responsavel: 'Judith',
     color: '#45b7d1',
     shape: 'triangle',
     position: { x: 400, y: 250 }

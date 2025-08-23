@@ -53,6 +53,21 @@ function App() {
     }));
   };
 
+  const handleAnimalUpdate = (animalId, animalData) => {
+    setCanvases(prev => ({
+      ...prev,
+      [currentCanvasId]: {
+        ...prev[currentCanvasId],
+        nodes: prev[currentCanvasId].nodes.map(node => 
+          node.id === animalId 
+            ? { ...node, data: { ...node.data, ...animalData } }
+            : node
+        ),
+        edges: prev[currentCanvasId].edges
+      }
+    }));
+  };
+
   const currentCanvas = canvases[currentCanvasId];
 
   return (
@@ -72,6 +87,7 @@ function App() {
           edges={currentCanvas.edges}
           onUpdate={handleCanvasUpdate}
           onGranjaClick={handleGranjaClick}
+          onAnimalUpdate={handleAnimalUpdate}
           canvasId={currentCanvasId}
         />
         <ControlPanel

@@ -10,14 +10,17 @@ import '@xyflow/react/dist/style.css';
 import './FlowCanvas.css';
 import CustomNode from './CustomNode';
 import { FLOW_CONFIG } from '../config/flow-config';
+import AnimalDetailsPanel from './AnimalDetailsPanel';
 
 const nodeTypes = {
   custom: CustomNode
 };
 
-function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGranjaClick, canvasId }) {
+function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGranjaClick, onAnimalUpdate, canvasId }) {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
+  const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [isDetailsPanelOpen, setIsDetailsPanelOpen] = useState(false);
   const reactFlowWrapper = useRef(null);
 
   const onNodesChange = useCallback((changes) => {
@@ -52,6 +55,9 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
   const onNodeClick = useCallback((event, node) => {
     if (node.data.type === 'granja') {
       onGranjaClick(node.id);
+    } else if (node.data.type === 'animal') {
+      setSelectedAnimal(node);
+      setIsDetailsPanelOpen(true);
     }
   }, [onGranjaClick]);
 
@@ -65,6 +71,30 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
     setNodes(initialNodes);
     setEdges(initialEdges);
   }, [initialNodes, initialEdges]);
+
+  const handleSaveAnimal = useCallback((animalId, animalData) => {
+    // Atualizar o estado local
+    setNodes(prevNodes => 
+      prevNodes.map(node => 
+        node.id === animalId 
+          ? { ...node, data: { ...node.data, ...animalData } }
+          : node
+      )
+    );
+    
+    // Atualizar o estado global
+    if (onAnimalUpdate) {
+      onAnimalUpdate(animalId, animalData);
+    }
+    
+    setIsDetailsPanelOpen(false);
+    setSelectedAnimal(null);
+  }, [onAnimalUpdate]);
+
+  const handleCloseDetailsPanel = useCallback(() => {
+    setIsDetailsPanelOpen(false);
+    setSelectedAnimal(null);
+  }, []);
 
   return (
     <div className="flow-canvas" ref={reactFlowWrapper}>
@@ -95,6 +125,13 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
           nodeStrokeWidth={3}
         />
       </ReactFlow>
+      
+      <AnimalDetailsPanel
+        animal={selectedAnimal}
+        isOpen={isDetailsPanelOpen}
+        onClose={handleCloseDetailsPanel}
+        onSave={handleSaveAnimal}
+      />
     </div>
   );
 }
