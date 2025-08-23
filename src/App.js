@@ -109,9 +109,8 @@ function App() {
   };
 
   const handleAnimalUpdate = (animalId, animalData) => {
-    setCanvases(prev => ({
-      ...prev,
-      [currentCanvasId]: {
+    setCanvases(prev => {
+      const updatedCanvas = {
         ...prev[currentCanvasId],
         nodes: prev[currentCanvasId].nodes.map(node => 
           node.id === animalId 
@@ -127,29 +126,24 @@ function App() {
             : node
         ),
         edges: prev[currentCanvasId].edges
-      }
-    }));
-    
-    // Salvar no localStorage imediatamente
-    const updatedCanvas = {
-      ...prev[currentCanvasId],
-      nodes: prev[currentCanvasId].nodes.map(node => 
-        node.id === animalId 
-          ? { 
-              ...node, 
-              data: { 
-                ...node.data, 
-                ...animalData,
-                animalName: animalData.nome || node.data.animalName
-              } 
-            }
-          : node
-      ),
-      edges: prev[currentCanvasId].edges
-    };
-    
-    // Salvar estado atualizado no localStorage
-    saveCanvasState(currentCanvasId, updatedCanvas.nodes, updatedCanvas.edges);
+      };
+      
+      // Salvar estado atualizado no localStorage
+      saveCanvasState(currentCanvasId, updatedCanvas.nodes, updatedCanvas.edges);
+      
+      return {
+        ...prev,
+        [currentCanvasId]: updatedCanvas
+      };
+    });
+  };
+
+  const handleSaveSVG = (canvasId) => {
+    // Esta função será implementada no FlowCanvas
+    // Por enquanto, vamos apenas passar a referência
+    if (window.saveCanvasAsSVG) {
+      window.saveCanvasAsSVG(canvasId);
+    }
   };
 
   const currentCanvas = canvases[currentCanvasId];
@@ -179,6 +173,7 @@ function App() {
           currentCanvasId={currentCanvasId}
           onCanvasSelect={setCurrentCanvasId}
           onGranjaClick={handleGranjaClick}
+          onSaveSVG={() => handleSaveSVG(currentCanvasId)}
         />
       </div>
     </div>

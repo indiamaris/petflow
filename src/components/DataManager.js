@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './DataManager.css';
 import { exportAllData, importData, clearAllData } from '../utils/storage-utils';
 
-const DataManager = () => {
+const DataManager = ({ onSaveSVG }) => {
   const [importFile, setImportFile] = useState(null);
   const [showConfirmClear, setShowConfirmClear] = useState(false);
 
@@ -69,6 +69,10 @@ const DataManager = () => {
       <div className="data-actions">
         <button className="export-btn" onClick={handleExport}>
           📤 Exportar Dados
+        </button>
+        
+        <button className="save-svg-btn" onClick={onSaveSVG}>
+          🖼️ Salvar Canvas como SVG
         </button>
         
         <div className="import-section">

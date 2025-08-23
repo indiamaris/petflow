@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './ControlPanel.css';
 import DataManager from './DataManager';
 
-const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick }) => {
+const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick, onSaveSVG }) => {
   const [expandedNodes, setExpandedNodes] = useState(new Set(['main']));
 
   const toggleNode = (nodeId) => {
@@ -104,7 +104,7 @@ const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick
         ))}
       </div>
       
-      <DataManager />
+      <DataManager onSaveSVG={onSaveSVG} />
     </div>
   );
 };
