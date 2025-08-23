@@ -25,22 +25,38 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
 
   const onNodesChange = useCallback((changes) => {
     setNodes((nds) => {
-      const updatedNodes = nds.map(node => {
-        const change = changes.find(c => c.id === node.id);
-        if (change && change.type === 'position') {
-          return { ...node, position: change.position };
+      let updatedNodes = [...nds];
+      
+      changes.forEach(change => {
+        if (change.type === 'position') {
+          updatedNodes = updatedNodes.map(node => 
+            node.id === change.id 
+              ? { ...node, position: change.position }
+              : node
+          );
+        } else if (change.type === 'remove') {
+          updatedNodes = updatedNodes.filter(node => node.id !== change.id);
+        } else if (change.type === 'add') {
+          updatedNodes = [...updatedNodes, change.item];
         }
-        return node;
       });
+      
       return updatedNodes;
     });
   }, []);
 
   const onEdgesChange = useCallback((changes) => {
     setEdges((eds) => {
-      const updatedEdges = eds.filter(edge => 
-        !changes.some(change => change.id === edge.id && change.type === 'remove')
-      );
+      let updatedEdges = [...eds];
+      
+      changes.forEach(change => {
+        if (change.type === 'remove') {
+          updatedEdges = updatedEdges.filter(edge => edge.id !== change.id);
+        } else if (change.type === 'add') {
+          updatedEdges = [...updatedEdges, change.item];
+        }
+      });
+      
       return updatedEdges;
     });
   }, []);
@@ -53,6 +69,7 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
   );
 
   const onNodeClick = useCallback((event, node) => {
+    console.log('Node clicked:', node);
     if (node.data.type === 'granja') {
       onGranjaClick(node.id);
     } else if (node.data.type === 'animal') {
@@ -66,11 +83,11 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
     onUpdate(nodes, edges);
   }, [nodes, edges, onUpdate]);
 
-  // Sincronizar com as mudanças externas
+  // Sincronizar com as mudanças externas apenas na primeira renderização
   useEffect(() => {
     setNodes(initialNodes);
     setEdges(initialEdges);
-  }, [initialNodes, initialEdges]);
+  }, []); // Array vazio para executar apenas uma vez
 
   const handleSaveAnimal = useCallback((animalId, animalData) => {
     // Atualizar o estado local
