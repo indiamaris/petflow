@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './ControlPanel.css';
+import DataManager from './DataManager';
 
 const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick }) => {
   const [expandedNodes, setExpandedNodes] = useState(new Set(['main']));
@@ -102,6 +103,8 @@ const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick
           </div>
         ))}
       </div>
+      
+      <DataManager />
     </div>
   );
 };

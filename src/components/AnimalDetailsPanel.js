@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AnimalDetailsPanel.css';
+import { saveAnimalData, getAnimalData } from '../utils/storage-utils';
 
 const AnimalDetailsPanel = ({ animal, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -14,12 +15,15 @@ const AnimalDetailsPanel = ({ animal, isOpen, onClose, onSave }) => {
 
   useEffect(() => {
     if (animal) {
+      // Tentar carregar dados salvos do localStorage
+      const savedData = getAnimalData(animal.id);
+      
       setFormData({
-        nome: animal.data.animalName || '',
-        apelido: animal.data.apelido || '',
-        peso: animal.data.peso || '',
-        idade: animal.data.idade || '',
-        responsavel: animal.data.responsavel || ''
+        nome: savedData?.nome || animal.data.animalName || '',
+        apelido: savedData?.apelido || animal.data.apelido || '',
+        peso: savedData?.peso || animal.data.peso || '',
+        idade: savedData?.idade || animal.data.idade || '',
+        responsavel: savedData?.responsavel || animal.data.responsavel || ''
       });
     }
   }, [animal]);
@@ -32,10 +36,23 @@ const AnimalDetailsPanel = ({ animal, isOpen, onClose, onSave }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSave && animal) {
-      onSave(animal.id, formData);
+    if (animal) {
+      // Salvar no localStorage
+      const success = saveAnimalData(animal.id, formData);
+      
+      if (success) {
+        // Atualizar o estado global
+        if (onSave) {
+          onSave(animal.id, formData);
+        }
+        
+        // Mostrar mensagem de sucesso
+        alert('Dados salvos com sucesso!');
+      } else {
+        alert('Erro ao salvar dados. Tente novamente.');
+      }
     }
   };
 

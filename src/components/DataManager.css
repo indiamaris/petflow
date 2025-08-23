@@ -1,0 +1,140 @@
+.data-manager {
+  border-top: 2px solid #e9ecef;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.data-manager h4 {
+  margin: 0 0 15px 0;
+  color: #495057;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.data-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.export-btn,
+.import-btn,
+.apply-import-btn,
+.clear-btn,
+.cancel-clear-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.export-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.export-btn:hover {
+  background-color: #138496;
+  transform: translateY(-1px);
+}
+
+.import-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-input {
+  display: none;
+}
+
+.import-btn {
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+}
+
+.import-btn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.apply-import-btn {
+  background-color: #ffc107;
+  color: #212529;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+}
+
+.apply-import-btn:hover {
+  background-color: #e0a800;
+  transform: translateY(-1px);
+}
+
+.clear-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.clear-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.clear-btn.confirm {
+  background-color: #fd7e14;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.cancel-clear-btn {
+  background-color: #6c757d;
+  color: white;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+}
+
+.cancel-clear-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+.data-info {
+  background-color: #e9ecef;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.data-info p {
+  margin: 5px 0;
+  font-size: 0.8rem;
+  color: #6c757d;
+  line-height: 1.3;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .data-actions {
+    gap: 10px;
+  }
+  
+  .export-btn,
+  .import-btn,
+  .apply-import-btn,
+  .clear-btn,
+  .cancel-clear-btn {
+    padding: 12px 15px;
+    font-size: 1rem;
+  }
+}

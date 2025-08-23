@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import FlowCanvas from './components/FlowCanvas';
 import ControlPanel from './components/ControlPanel';
 import { generateInitialNodes, generateInitialEdges } from './utils/flow-utils';
+import { getCanvasState, saveCanvasState, getAnimalsData } from './utils/storage-utils';
 
 function App() {
   const [currentCanvasId, setCurrentCanvasId] = useState('main');
@@ -15,6 +16,57 @@ function App() {
       parentId: null
     }
   });
+
+  // Carregar dados salvos do localStorage na inicialização
+  useEffect(() => {
+    const savedCanvasState = getCanvasState();
+    const savedAnimalsData = getAnimalsData();
+    
+    if (Object.keys(savedCanvasState).length > 0) {
+      setCanvases(prev => {
+        const updated = { ...prev };
+        
+        Object.keys(savedCanvasState).forEach(canvasId => {
+          if (updated[canvasId]) {
+            updated[canvasId] = {
+              ...updated[canvasId],
+              nodes: savedCanvasState[canvasId].nodes || updated[canvasId].nodes,
+              edges: savedCanvasState[canvasId].edges || updated[canvasId].edges
+            };
+          }
+        });
+        
+        return updated;
+      });
+    }
+    
+    // Aplicar dados salvos dos animais aos nós existentes
+    if (Object.keys(savedAnimalsData).length > 0) {
+      setCanvases(prev => {
+        const updated = { ...prev };
+        
+        Object.keys(updated).forEach(canvasId => {
+          updated[canvasId] = {
+            ...updated[canvasId],
+            nodes: updated[canvasId].nodes.map(node => {
+              if (savedAnimalsData[node.id]) {
+                return {
+                  ...node,
+                  data: {
+                    ...node.data,
+                    ...savedAnimalsData[node.id]
+                  }
+                };
+              }
+              return node;
+            })
+          };
+        });
+        
+        return updated;
+      });
+    }
+  }, []);
 
   const handleGranjaClick = (granjaId) => {
     const newCanvasId = `granja-${granjaId}`;
@@ -51,6 +103,9 @@ function App() {
         edges
       }
     }));
+    
+    // Salvar estado do canvas no localStorage
+    saveCanvasState(currentCanvasId, nodes, edges);
   };
 
   const handleAnimalUpdate = (animalId, animalData) => {
@@ -60,12 +115,41 @@ function App() {
         ...prev[currentCanvasId],
         nodes: prev[currentCanvasId].nodes.map(node => 
           node.id === animalId 
-            ? { ...node, data: { ...node.data, ...animalData } }
+            ? { 
+                ...node, 
+                data: { 
+                  ...node.data, 
+                  ...animalData,
+                  // Atualizar o animalName para refletir no canvas
+                  animalName: animalData.nome || node.data.animalName
+                } 
+              }
             : node
         ),
         edges: prev[currentCanvasId].edges
       }
     }));
+    
+    // Salvar no localStorage imediatamente
+    const updatedCanvas = {
+      ...prev[currentCanvasId],
+      nodes: prev[currentCanvasId].nodes.map(node => 
+        node.id === animalId 
+          ? { 
+              ...node, 
+              data: { 
+                ...node.data, 
+                ...animalData,
+                animalName: animalData.nome || node.data.animalName
+              } 
+            }
+          : node
+      ),
+      edges: prev[currentCanvasId].edges
+    };
+    
+    // Salvar estado atualizado no localStorage
+    saveCanvasState(currentCanvasId, updatedCanvas.nodes, updatedCanvas.edges);
   };
 
   const currentCanvas = canvases[currentCanvasId];

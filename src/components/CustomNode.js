@@ -47,7 +47,7 @@ const CustomNode = ({ data, selected, id }) => {
       
       <div className="node-content" style={getShapeStyle()}>
         <div className="node-label" style={getLabelStyle()}>
-          {type === 'granja' ? label : animalName}
+          {type === 'granja' ? label : (animalName || 'Sem Nome')}
         </div>
         {type === 'animal' && (
           <div className="animal-type" style={getLabelStyle()}>

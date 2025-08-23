@@ -12,6 +12,7 @@ import CustomNode from './CustomNode';
 import { FLOW_CONFIG } from '../config/flow-config';
 import AnimalDetailsPanel from './AnimalDetailsPanel';
 import ContextMenu from './ContextMenu';
+import { saveAnimalData } from '../utils/storage-utils';
 
 const nodeTypes = {
   custom: CustomNode
@@ -100,7 +101,9 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
 
   // Atualizar o estado global quando os nós ou edges mudarem
   useEffect(() => {
-    onUpdate(nodes, edges);
+    if (onUpdate) {
+      onUpdate(nodes, edges);
+    }
   }, [nodes, edges, onUpdate]);
 
   // Sincronizar com as mudanças externas apenas na primeira renderização
@@ -110,11 +113,19 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
   }, []); // Array vazio para executar apenas uma vez
 
   const handleSaveAnimal = useCallback((animalId, animalData) => {
-    // Atualizar o estado local
+    // Atualizar o estado local dos nós imediatamente
     setNodes(prevNodes => 
       prevNodes.map(node => 
         node.id === animalId 
-          ? { ...node, data: { ...node.data, ...animalData } }
+          ? { 
+              ...node, 
+              data: { 
+                ...node.data, 
+                ...animalData,
+                // Atualizar o animalName para refletir no canvas
+                animalName: animalData.nome || node.data.animalName
+              } 
+            }
           : node
       )
     );
@@ -124,6 +135,7 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
       onAnimalUpdate(animalId, animalData);
     }
     
+    // Fechar o painel
     setIsDetailsPanelOpen(false);
     setSelectedAnimal(null);
   }, [onAnimalUpdate]);
@@ -212,8 +224,17 @@ function FlowCanvas({ nodes: initialNodes, edges: initialEdges, onUpdate, onGran
       onUpdate(updatedNodes, updatedEdges);
     }
     
-    // Se for um animal, abrir automaticamente o painel de detalhes
+    // Se for um animal, salvar dados iniciais no localStorage e abrir painel
     if (artifactType.type === 'animal') {
+      const initialData = {
+        nome: animalName,
+        apelido: '',
+        peso: '',
+        idade: '',
+        responsavel: ''
+      };
+      
+      saveAnimalData(newNodeId, initialData);
       setSelectedAnimal(newNode);
       setIsDetailsPanelOpen(true);
     }
