@@ -89,6 +89,9 @@ function App() {
     }
     
     setCurrentCanvasId(newCanvasId);
+    
+    // Aplicar highlight na matilha clicada
+    handleMatilhaHighlight(matilhaId);
   };
 
   const handleMatilhaHighlight = (matilhaId) => {
@@ -135,6 +138,8 @@ function App() {
 
   const handleBackToMain = () => {
     setCurrentCanvasId('main');
+    // Limpar highlight ao voltar ao canvas principal
+    setHighlightedNodes(new Set());
   };
 
   const handleCanvasUpdate = (nodes, edges) => {
@@ -222,7 +227,11 @@ function App() {
         <ControlPanel
           canvases={canvases}
           currentCanvasId={currentCanvasId}
-          onCanvasSelect={setCurrentCanvasId}
+          onCanvasSelect={(canvasId) => {
+            setCurrentCanvasId(canvasId);
+            // Limpar highlight ao mudar de canvas
+            setHighlightedNodes(new Set());
+          }}
           onMatilhaClick={handleMatilhaClick}
           onMatilhaHighlight={handleMatilhaHighlight}
           onSaveSVG={() => handleSaveSVG(currentCanvasId)}

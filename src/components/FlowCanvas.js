@@ -437,7 +437,21 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
             highlightedNodes: highlightedNodes && typeof highlightedNodes === 'object' ? highlightedNodes : new Set()
           }
         }))}
-        edges={edges}
+        edges={edges.map(edge => {
+          const isHighlighted = highlightedNodes && 
+            highlightedNodes.has(edge.source) && 
+            highlightedNodes.has(edge.target);
+          
+          return {
+            ...edge,
+            style: {
+              ...edge.style,
+              stroke: isHighlighted ? '#ffd700' : edge.style?.stroke || '#666',
+              strokeWidth: isHighlighted ? 4 : edge.style?.strokeWidth || 2,
+              strokeDasharray: isHighlighted ? '8,4' : edge.style?.strokeDasharray || 'none'
+            }
+          };
+        })}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}

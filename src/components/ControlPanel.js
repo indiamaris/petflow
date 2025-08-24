@@ -41,7 +41,15 @@ const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onMatilhaClic
           
           <span 
             className="canvas-name"
-            onClick={() => onCanvasSelect(canvasId)}
+            onClick={() => {
+              if (canvas.parentId) {
+                // Se for uma matilha, aplicar highlight
+                onMatilhaHighlight(canvasId.replace('matilha-', ''));
+              } else {
+                // Se for o canvas principal, selecionar
+                onCanvasSelect(canvasId);
+              }
+            }}
           >
             {canvas.name}
           </span>
@@ -52,6 +60,7 @@ const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onMatilhaClic
               onClick={() => onMatilhaClick(canvasId.replace('matilha-', ''))}
               onMouseEnter={() => onMatilhaHighlight(canvasId.replace('matilha-', ''))}
               onMouseLeave={() => onMatilhaHighlight(null)}
+              onMouseDown={() => onMatilhaHighlight(canvasId.replace('matilha-', ''))}
               title="Abrir Matilha"
             >
               🏠
@@ -95,12 +104,19 @@ const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onMatilhaClic
         </div>
         {getGranjaNodes().map(granja => (
           <div key={granja.id} className="matilha-item">
-            <span>{granja.name}</span>
+            <span 
+              className="matilha-name"
+              onClick={() => onMatilhaHighlight(granja.id.replace('matilha-', ''))}
+              title="Clique para destacar no canvas"
+            >
+              {granja.name}
+            </span>
             <button 
               className="open-matilha-btn"
               onClick={() => onMatilhaClick(granja.id.replace('matilha-', ''))}
               onMouseEnter={() => onMatilhaHighlight(granja.id.replace('matilha-', ''))}
               onMouseLeave={() => onMatilhaHighlight(null)}
+              onMouseDown={() => onMatilhaHighlight(granja.id.replace('matilha-', ''))}
             >
               Abrir
             </button>

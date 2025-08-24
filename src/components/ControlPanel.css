@@ -78,6 +78,12 @@
 .canvas-name {
   flex: 1;
   font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.canvas-name:hover {
+  color: #007bff;
 }
 
 .matilha-button {
@@ -136,6 +142,16 @@
 .matilha-item span {
   font-size: 0.9rem;
   color: #495057;
+}
+
+.matilha-name {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.matilha-name:hover {
+  color: #007bff;
+  text-decoration: underline;
 }
 
 .open-matilha-btn {
