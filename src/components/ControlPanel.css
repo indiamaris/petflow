@@ -80,7 +80,7 @@
   font-size: 0.9rem;
 }
 
-.granja-button {
+.matilha-button {
   background: none;
   border: none;
   cursor: pointer;
@@ -90,7 +90,7 @@
   transition: all 0.2s ease;
 }
 
-.granja-button:hover {
+.matilha-button:hover {
   background-color: #dee2e6;
   transform: scale(1.1);
 }
@@ -101,18 +101,18 @@
   padding-left: 10px;
 }
 
-.granja-summary {
+.matilha-summary {
   border-top: 2px solid #e9ecef;
   padding-top: 20px;
 }
 
-.granja-summary h4 {
+.matilha-summary h4 {
   margin: 0 0 15px 0;
   color: #495057;
   font-size: 1rem;
 }
 
-.granja-count {
+.matilha-count {
   background-color: #e9ecef;
   padding: 10px;
   border-radius: 6px;
@@ -122,7 +122,7 @@
   text-align: center;
 }
 
-.granja-item {
+.matilha-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -133,12 +133,12 @@
   margin-bottom: 8px;
 }
 
-.granja-item span {
+.matilha-item span {
   font-size: 0.9rem;
   color: #495057;
 }
 
-.open-granja-btn {
+.open-matilha-btn {
   background-color: #28a745;
   color: white;
   border: none;
@@ -149,7 +149,7 @@
   transition: background-color 0.2s;
 }
 
-.open-granja-btn:hover {
+.open-matilha-btn:hover {
   background-color: #218838;
 }
 

@@ -2,18 +2,18 @@ import React from 'react';
 import './ContextMenu.css';
 
 const ARTIFACT_TYPES = [
-  { id: 'granja', type: 'granja', label: 'Granja', color: '#ff6b6b', shape: 'square' },
-  { id: 'cachorro', type: 'animal', label: 'Cachorro', color: '#4ecdc4', shape: 'circle' },
-  { id: 'gato', type: 'animal', label: 'Gato', color: '#45b7d1', shape: 'triangle' },
-  { id: 'passarinho', type: 'animal', label: 'Passarinho', color: '#96ceb4', shape: 'diamond' },
-  { id: 'coelho', type: 'animal', label: 'Coelho', color: '#feca57', shape: 'hexagon' },
-  { id: 'hamster', type: 'animal', label: 'Hamster', color: '#ff9ff3', shape: 'star' },
-  { id: 'peixe', type: 'animal', label: 'Peixe', color: '#54a0ff', shape: 'circle' },
-  { id: 'tartaruga', type: 'animal', label: 'Tartaruga', color: '#5f27cd', shape: 'square' },
-  { id: 'porquinho', type: 'animal', label: 'Porquinho', color: '#ff6348', shape: 'triangle' },
-  { id: 'cavalo', type: 'animal', label: 'Cavalo', color: '#8b4513', shape: 'diamond' },
-  { id: 'vaca', type: 'animal', label: 'Vaca', color: '#2c3e50', shape: 'hexagon' },
-  { id: 'galinha', type: 'animal', label: 'Galinha', color: '#f39c12', shape: 'star' }
+  { id: 'matilha', type: 'matilha', label: 'Matilha', color: '#ff6b6b', shape: 'square' },
+  { id: 'chihuahua', type: 'animal', label: 'Chihuahua', color: '#4ecdc4', shape: 'circle' },
+  { id: 'labrador', type: 'animal', label: 'Labrador', color: '#45b7d1', shape: 'triangle' },
+  { id: 'golden', type: 'animal', label: 'Golden Retriever', color: '#96ceb4', shape: 'diamond' },
+  { id: 'bulldog', type: 'animal', label: 'Bulldog', color: '#feca57', shape: 'hexagon' },
+  { id: 'poodle', type: 'animal', label: 'Poodle', color: '#ff9ff3', shape: 'star' },
+  { id: 'beagle', type: 'animal', label: 'Beagle', color: '#54a0ff', shape: 'circle' },
+  { id: 'rottweiler', type: 'animal', label: 'Rottweiler', color: '#5f27cd', shape: 'square' },
+  { id: 'doberman', type: 'animal', label: 'Doberman', color: '#ff6348', shape: 'triangle' },
+  { id: 'husky', type: 'animal', label: 'Husky Siberiano', color: '#8b4513', shape: 'diamond' },
+  { id: 'pastor-alemao', type: 'animal', label: 'Pastor Alemão', color: '#2c3e50', shape: 'hexagon' },
+  { id: 'boxer', type: 'animal', label: 'Boxer', color: '#f39c12', shape: 'star' }
 ];
 
 const ContextMenu = ({ position, onClose, onCreateArtifact, sourceNode }) => {
@@ -72,7 +72,7 @@ const ContextMenu = ({ position, onClose, onCreateArtifact, sourceNode }) => {
                   }}
                 >
                   <span className="artifact-icon">
-                    {artifact.id === 'granja' ? '🏠' : '🐾'}
+                    {artifact.id === 'matilha' ? '🏠' : '🐕'}
                   </span>
                 </div>
                 <span className="artifact-label">{artifact.label}</span>

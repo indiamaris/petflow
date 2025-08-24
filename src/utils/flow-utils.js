@@ -1,154 +1,155 @@
 // Configuração dos 12 artefatos com diferentes formas e cores
 const ARTIFACTS_CONFIG = [
   {
-    id: 'granja-1',
-    type: 'granja',
-    label: 'Granja Principal',
+    id: 'matilha-1',
+    type: 'matilha',
+    label: 'Matilha Principal',
     color: '#ff6b6b',
     shape: 'square',
     position: { x: 400, y: 100 }
   },
   {
-    id: 'cachorro',
+    id: 'chihuahua',
     type: 'animal',
-    label: 'Cachorro',
-    animalName: 'Rex',
-    apelido: 'Rexinho',
-    peso: '15.5',
-    idade: '3',
+    label: 'Chihuahua',
+    animalName: 'Tiny',
+    apelido: 'Tininho',
+    peso: '2.5',
+    idade: '2',
     responsavel: 'India',
     color: '#4ecdc4',
     shape: 'circle',
     position: { x: 200, y: 250 }
   },
   {
-    id: 'gato',
+    id: 'labrador',
     type: 'animal',
-    label: 'Gato',
-    animalName: 'Mia',
-    apelido: 'Miauzinho',
-    peso: '4.2',
-    idade: '2',
+    label: 'Labrador',
+    animalName: 'Buddy',
+    apelido: 'Buddy',
+    peso: '28.0',
+    idade: '4',
     responsavel: 'Judith',
     color: '#45b7d1',
     shape: 'triangle',
     position: { x: 400, y: 250 }
   },
   {
-    id: 'passarinho',
+    id: 'golden',
     type: 'animal',
-    label: 'Passarinho',
-    animalName: 'Piu',
+    label: 'Golden Retriever',
+    animalName: 'Max',
     color: '#96ceb4',
     shape: 'diamond',
     position: { x: 600, y: 250 }
   },
   {
-    id: 'coelho',
+    id: 'bulldog',
     type: 'animal',
-    label: 'Coelho',
-    animalName: 'Bunny',
+    label: 'Bulldog',
+    animalName: 'Rocky',
     color: '#feca57',
     shape: 'hexagon',
     position: { x: 200, y: 400 }
   },
   {
-    id: 'hamster',
+    id: 'poodle',
     type: 'animal',
-    label: 'Hamster',
-    animalName: 'Nibbles',
+    label: 'Poodle',
+    animalName: 'Luna',
     color: '#ff9ff3',
     shape: 'star',
     position: { x: 400, y: 400 }
   },
   {
-    id: 'peixe',
+    id: 'beagle',
     type: 'animal',
-    label: 'Peixe',
-    animalName: 'Bubbles',
+    label: 'Beagle',
+    animalName: 'Charlie',
     color: '#54a0ff',
     shape: 'circle',
     position: { x: 600, y: 400 }
   },
   {
-    id: 'tartaruga',
+    id: 'rottweiler',
     type: 'animal',
-    label: 'Tartaruga',
-    animalName: 'Shelly',
+    label: 'Rottweiler',
+    animalName: 'Bear',
     color: '#5f27cd',
     shape: 'square',
     position: { x: 200, y: 550 }
   },
   {
-    id: 'porquinho',
+    id: 'doberman',
     type: 'animal',
-    label: 'Porquinho',
-    animalName: 'Piggy',
+    label: 'Doberman',
+    animalName: 'Shadow',
     color: '#ff6348',
     shape: 'triangle',
     position: { x: 400, y: 550 }
   },
   {
-    id: 'cavalo',
+    id: 'husky',
     type: 'animal',
-    label: 'Cavalo',
-    animalName: 'Thunder',
+    label: 'Husky Siberiano',
+    animalName: 'Storm',
     color: '#8b4513',
     shape: 'diamond',
     position: { x: 600, y: 550 }
   },
   {
-    id: 'vaca',
+    id: 'pastor-alemao',
     type: 'animal',
-    label: 'Vaca',
-    animalName: 'Bessie',
+    label: 'Pastor Alemão',
+    animalName: 'Rex',
     color: '#2c3e50',
     shape: 'hexagon',
     position: { x: 300, y: 700 }
   },
   {
-    id: 'galinha',
+    id: 'boxer',
     type: 'animal',
-    label: 'Galinha',
-    animalName: 'Cluck',
+    label: 'Boxer',
+    animalName: 'Tyson',
     color: '#f39c12',
     shape: 'star',
     position: { x: 500, y: 700 }
   }
 ];
 
-// Nomes únicos para novos animais
+// Nomes únicos para novos cachorros
 const ANIMAL_NAMES = [
   'Buddy', 'Max', 'Luna', 'Rocky', 'Bella', 'Charlie', 'Lucy', 'Cooper',
   'Daisy', 'Bear', 'Molly', 'Duke', 'Sophie', 'Jack', 'Ruby', 'Oliver',
-  'Chloe', 'Tucker', 'Penny', 'Winston', 'Lola', 'Murphy', 'Zoe', 'Finn'
+  'Chloe', 'Tucker', 'Penny', 'Winston', 'Lola', 'Murphy', 'Zoe', 'Finn',
+  'Shadow', 'Storm', 'Tyson', 'Rex', 'Tiny', 'Apollo', 'Nova', 'Zeus'
 ];
 
-// Configuração para granjas específicas (sub-canvases)
-const GRANJA_CONFIGS = {
+// Configuração para matilhas específicas (sub-canvases)
+const MATILHA_CONFIGS = {
   '1': [
     {
-      id: 'granja-1-sub',
-      type: 'granja',
-      label: 'Sub-Granja 1',
+      id: 'matilha-1-sub',
+      type: 'matilha',
+      label: 'Sub-Matilha 1',
       color: '#e74c3c',
       shape: 'square',
       position: { x: 300, y: 100 }
     },
     {
-      id: 'cachorro-sub',
+      id: 'chihuahua-sub',
       type: 'animal',
-      label: 'Cachorro Filhote',
-      animalName: 'Max',
+      label: 'Chihuahua Filhote',
+      animalName: 'Tiny',
       color: '#1abc9c',
       shape: 'circle',
       position: { x: 200, y: 250 }
     },
     {
-      id: 'gato-sub',
+      id: 'labrador-sub',
       type: 'animal',
-      label: 'Gato Filhote',
-      animalName: 'Luna',
+      label: 'Labrador Filhote',
+      animalName: 'Buddy',
       color: '#3498db',
       shape: 'triangle',
       position: { x: 400, y: 250 }
@@ -156,9 +157,9 @@ const GRANJA_CONFIGS = {
   ]
 };
 
-export const generateInitialNodes = (granjaId = null) => {
-  if (granjaId && GRANJA_CONFIGS[granjaId]) {
-    return GRANJA_CONFIGS[granjaId].map(artifact => ({
+export const generateInitialNodes = (matilhaId = null) => {
+  if (matilhaId && MATILHA_CONFIGS[matilhaId]) {
+    return MATILHA_CONFIGS[matilhaId].map(artifact => ({
       id: artifact.id,
       type: 'custom',
       position: artifact.position,
@@ -174,21 +175,21 @@ export const generateInitialNodes = (granjaId = null) => {
   }));
 };
 
-export const generateInitialEdges = (granjaId = null) => {
-  if (granjaId && GRANJA_CONFIGS[granjaId]) {
+export const generateInitialEdges = (matilhaId = null) => {
+  if (matilhaId && MATILHA_CONFIGS[matilhaId]) {
     return [
       {
         id: 'e1-sub',
-        source: 'granja-1-sub',
-        target: 'cachorro-sub',
+        source: 'matilha-1-sub',
+        target: 'chihuahua-sub',
         type: 'smoothstep',
         animated: true,
         style: { stroke: '#e74c3c', strokeWidth: 2 }
       },
       {
         id: 'e2-sub',
-        source: 'granja-1-sub',
-        target: 'gato-sub',
+        source: 'matilha-1-sub',
+        target: 'labrador-sub',
         type: 'smoothstep',
         animated: true,
         style: { stroke: '#e74c3c', strokeWidth: 2 }
@@ -199,88 +200,88 @@ export const generateInitialEdges = (granjaId = null) => {
   return [
     {
       id: 'e1',
-      source: 'granja-1',
-      target: 'cachorro',
+      source: 'matilha-1',
+      target: 'chihuahua',
       type: 'smoothstep',
       animated: true,
       style: { stroke: '#ff6b6b', strokeWidth: 3 }
     },
     {
       id: 'e2',
-      source: 'granja-1',
-      target: 'gato',
+      source: 'matilha-1',
+      target: 'labrador',
       type: 'smoothstep',
       animated: true,
       style: { stroke: '#ff6b6b', strokeWidth: 3 }
     },
     {
       id: 'e3',
-      source: 'granja-1',
-      target: 'passarinho',
+      source: 'matilha-1',
+      target: 'golden',
       type: 'smoothstep',
       animated: true,
       style: { stroke: '#ff6b6b', strokeWidth: 3 }
     },
     {
       id: 'e4',
-      source: 'cachorro',
-      target: 'coelho',
+      source: 'chihuahua',
+      target: 'bulldog',
       type: 'smoothstep',
       animated: false,
       style: { stroke: '#4ecdc4', strokeWidth: 2 }
     },
     {
       id: 'e5',
-      source: 'gato',
-      target: 'hamster',
+      source: 'labrador',
+      target: 'poodle',
       type: 'smoothstep',
       animated: false,
       style: { stroke: '#45b7d1', strokeWidth: 2 }
     },
     {
       id: 'e6',
-      source: 'passarinho',
-      target: 'peixe',
+      source: 'golden',
+      target: 'beagle',
       type: 'smoothstep',
       animated: false,
       style: { stroke: '#96ceb4', strokeWidth: 2 }
     },
     {
       id: 'e7',
-      source: 'coelho',
-      target: 'tartaruga',
+      source: 'bulldog',
+      target: 'rottweiler',
       type: 'smoothstep',
       animated: false,
       style: { stroke: '#feca57', strokeWidth: 2 }
     },
     {
       id: 'e8',
-      source: 'hamster',
-      target: 'porquinho',
+      source: 'poodle',
+      target: 'doberman',
       type: 'smoothstep',
       animated: false,
       style: { stroke: '#ff9ff3', strokeWidth: 2 }
     },
     {
       id: 'e9',
-      source: 'peixe',
-      target: 'cavalo',
+      source: 'beagle',
+      target: 'husky',
       type: 'smoothstep',
       animated: false,
       style: { stroke: '#54a0ff', strokeWidth: 2 }
     },
     {
       id: 'e10',
-      source: 'tartaruga',
-      target: 'vaca',
+      source: 'rottweiler',
+      target: 'pastor-alemao',
       type: 'smoothstep',
       animated: false,
       style: { stroke: '#5f27cd', strokeWidth: 2 }
     },
     {
       id: 'e11',
-      source: 'porquinho',
-      target: 'galinha',
+      source: 'doberman',
+      target: 'boxer',
       type: 'smoothstep',
       animated: false,
       style: { stroke: '#ff6348', strokeWidth: 2 }

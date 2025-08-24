@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './ControlPanel.css';
 import DataManager from './DataManager';
 
-const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick, onGranjaHighlight, onSaveSVG }) => {
+const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onMatilhaClick, onMatilhaHighlight, onSaveSVG }) => {
   const [expandedNodes, setExpandedNodes] = useState(new Set(['main']));
 
   const toggleNode = (nodeId) => {
@@ -48,11 +48,11 @@ const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick
           
           {canvas.parentId && (
             <button 
-              className="granja-button"
-              onClick={() => onGranjaClick(canvasId.replace('granja-', ''))}
-              onMouseEnter={() => onGranjaHighlight(canvasId.replace('granja-', ''))}
-              onMouseLeave={() => onGranjaHighlight(null)}
-              title="Abrir Granja"
+              className="matilha-button"
+              onClick={() => onMatilhaClick(canvasId.replace('matilha-', ''))}
+              onMouseEnter={() => onMatilhaHighlight(canvasId.replace('matilha-', ''))}
+              onMouseLeave={() => onMatilhaHighlight(null)}
+              title="Abrir Matilha"
             >
               🏠
             </button>
@@ -81,26 +81,26 @@ const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick
     <div className="control-panel">
       <div className="panel-header">
         <h3>Painel de Controle</h3>
-        <p>Artefatos Granjas</p>
+        <p>Artefatos Matilhas</p>
       </div>
       
       <div className="tree-container">
         {renderTreeNode('main')}
       </div>
       
-      <div className="granja-summary">
-        <h4>Resumo das Granjas</h4>
-        <div className="granja-count">
-          Total de Granjas: {getGranjaNodes().length}
+      <div className="matilha-summary">
+        <h4>Resumo das Matilhas</h4>
+        <div className="matilha-count">
+          Total de Matilhas: {getGranjaNodes().length}
         </div>
         {getGranjaNodes().map(granja => (
-          <div key={granja.id} className="granja-item">
+          <div key={granja.id} className="matilha-item">
             <span>{granja.name}</span>
             <button 
-              className="open-granja-btn"
-              onClick={() => onGranjaClick(granja.id.replace('granja-', ''))}
-              onMouseEnter={() => onGranjaHighlight(granja.id.replace('granja-', ''))}
-              onMouseLeave={() => onGranjaHighlight(null)}
+              className="open-matilha-btn"
+              onClick={() => onMatilhaClick(granja.id.replace('matilha-', ''))}
+              onMouseEnter={() => onMatilhaHighlight(granja.id.replace('matilha-', ''))}
+              onMouseLeave={() => onMatilhaHighlight(null)}
             >
               Abrir
             </button>

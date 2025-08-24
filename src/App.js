@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import FlowCanvas from './components/FlowCanvas';
 import ControlPanel from './components/ControlPanel';
-import { generateInitialNodes, generateInitialEdges } from './utils/flow-utils';
-import { getCanvasState, saveCanvasState, getAnimalsData } from './utils/storage-utils';
+import FlowCanvas from './components/FlowCanvas';
+import { generateInitialEdges, generateInitialNodes } from './utils/flow-utils';
+import { getAnimalsData, getCanvasState, saveCanvasState } from './utils/storage-utils';
 
 function App() {
   const [currentCanvasId, setCurrentCanvasId] = useState('main');
@@ -69,16 +69,16 @@ function App() {
     }
   }, []);
 
-  const handleGranjaClick = (granjaId) => {
-    const newCanvasId = `granja-${granjaId}`;
+  const handleMatilhaClick = (matilhaId) => {
+    const newCanvasId = `matilha-${matilhaId}`;
     
     if (!canvases[newCanvasId]) {
-      // Criar novo canvas para esta granja
+      // Criar novo canvas para esta matilha
       const newCanvas = {
         id: newCanvasId,
-        name: `Granja ${granjaId}`,
-        nodes: generateInitialNodes(granjaId),
-        edges: generateInitialEdges(granjaId),
+        name: `Matilha ${matilhaId}`,
+        nodes: generateInitialNodes(matilhaId),
+        edges: generateInitialEdges(matilhaId),
         parentId: currentCanvasId
       };
       
@@ -91,25 +91,25 @@ function App() {
     setCurrentCanvasId(newCanvasId);
   };
 
-  const handleGranjaHighlight = (granjaId) => {
-    if (!granjaId) {
+  const handleMatilhaHighlight = (matilhaId) => {
+    if (!matilhaId) {
       setHighlightedNodes(new Set());
       return;
     }
     
-    // Encontrar todos os nós filhos da granja (conectados a ela)
+    // Encontrar todos os nós filhos da matilha (conectados a ela)
     const currentCanvas = canvases[currentCanvasId];
     if (!currentCanvas) return;
     
     const nodesToHighlight = new Set();
-    nodesToHighlight.add(granjaId); // Adicionar a própria granja
+    nodesToHighlight.add(matilhaId); // Adicionar a própria matilha
     
-    // Encontrar nós conectados diretamente à granja
+    // Encontrar nós conectados diretamente à matilha
     currentCanvas.edges.forEach(edge => {
-      if (edge.source === granjaId) {
+      if (edge.source === matilhaId) {
         nodesToHighlight.add(edge.target);
       }
-      if (edge.target === granjaId) {
+      if (edge.target === matilhaId) {
         nodesToHighlight.add(edge.source);
       }
     });
@@ -207,7 +207,7 @@ function App() {
           nodes={currentCanvas.nodes}
           edges={currentCanvas.edges}
           onUpdate={handleCanvasUpdate}
-          onGranjaClick={handleGranjaClick}
+          onMatilhaClick={handleMatilhaClick}
           onAnimalUpdate={handleAnimalUpdate}
           canvasId={currentCanvasId}
           highlightedNodes={highlightedNodes}
@@ -216,8 +216,8 @@ function App() {
           canvases={canvases}
           currentCanvasId={currentCanvasId}
           onCanvasSelect={setCurrentCanvasId}
-          onGranjaClick={handleGranjaClick}
-          onGranjaHighlight={handleGranjaHighlight}
+          onMatilhaClick={handleMatilhaClick}
+          onMatilhaHighlight={handleMatilhaHighlight}
           onSaveSVG={() => handleSaveSVG(currentCanvasId)}
         />
       </div>

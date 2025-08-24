@@ -5,8 +5,10 @@ import './CustomNode.css';
 const CustomNode = ({ data, selected, id }) => {
   const { label, type, animalName, color, shape, highlightedNodes } = data;
   
+  // Verificar se o nó está destacado
+  const isHighlighted = highlightedNodes && highlightedNodes.has(id);
+  
   const getShapeStyle = () => {
-    const isHighlighted = highlightedNodes && highlightedNodes.has(id);
     const baseStyle = {
       backgroundColor: color,
       border: selected ? '3px solid #61dafb' : (isHighlighted ? '3px solid #ffd700' : '2px solid #fff'),
@@ -48,7 +50,7 @@ const CustomNode = ({ data, selected, id }) => {
       
       <div className="node-content" style={getShapeStyle()}>
         <div className="node-label" style={getLabelStyle()}>
-          {type === 'granja' ? label : (animalName || 'Sem Nome')}
+          {type === 'matilha' ? label : (animalName || 'Sem Nome')}
         </div>
         {type === 'animal' && (
           <div className="animal-type" style={getLabelStyle()}>

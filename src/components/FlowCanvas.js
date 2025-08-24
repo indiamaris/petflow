@@ -21,7 +21,7 @@ const nodeTypes = {
 };
 
 // Componente interno que usa useReactFlow
-function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, onGranjaClick, onAnimalUpdate, canvasId, highlightedNodes }) {
+function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, onMatilhaClick, onAnimalUpdate, canvasId, highlightedNodes }) {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
@@ -77,13 +77,13 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
 
   const onNodeClick = useCallback((event, node) => {
     console.log('Node clicked:', node);
-    if (node.data.type === 'granja') {
-      onGranjaClick(node.id);
+    if (node.data.type === 'matilha') {
+      onMatilhaClick(node.id);
     } else if (node.data.type === 'animal') {
       setSelectedAnimal(node);
       setIsDetailsPanelOpen(true);
     }
-  }, [onGranjaClick]);
+  }, [onMatilhaClick]);
 
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
@@ -204,8 +204,8 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
         // Adicionar nós como retângulos representativos
         allNodes.forEach(node => {
           const nodeElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          const nodeWidth = node.data.type === 'granja' ? 120 : 100;
-          const nodeHeight = node.data.type === 'granja' ? 80 : 60;
+          const nodeWidth = node.data.type === 'matilha' ? 120 : 100;
+          const nodeHeight = node.data.type === 'matilha' ? 80 : 60;
           
           nodeElement.setAttribute('x', node.position.x);
           nodeElement.setAttribute('y', node.position.y);
@@ -238,10 +238,10 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
           
           if (sourceNode && targetNode) {
             const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            const sourceX = sourceNode.position.x + (sourceNode.data.type === 'granja' ? 60 : 50);
-            const sourceY = sourceNode.position.y + (sourceNode.data.type === 'granja' ? 40 : 30);
-            const targetX = targetNode.position.x + (targetNode.data.type === 'granja' ? 60 : 50);
-            const targetY = targetNode.position.y + (targetNode.data.type === 'granja' ? 40 : 30);
+            const sourceX = sourceNode.position.x + (sourceNode.data.type === 'matilha' ? 60 : 50);
+            const sourceY = sourceNode.position.y + (sourceNode.data.type === 'matilha' ? 60 : 30);
+            const targetX = targetNode.position.x + (targetNode.data.type === 'matilha' ? 60 : 50);
+            const targetY = targetNode.position.y + (targetNode.data.type === 'matilha' ? 60 : 30);
             
             line.setAttribute('x1', sourceX);
             line.setAttribute('y1', sourceY);
@@ -307,7 +307,7 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
   const handleCreateArtifact = useCallback((artifactType, position) => {
     const newNodeId = `${artifactType.id}-${Date.now()}`;
     
-    // Gerar nome único para animais
+    // Gerar nome único para cachorros
     let animalName = artifactType.label;
     if (artifactType.type === 'animal') {
       const randomIndex = Math.floor(Math.random() * 24);
@@ -379,7 +379,7 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
       onUpdate(updatedNodes, updatedEdges);
     }
     
-    // Se for um animal, salvar dados iniciais no localStorage e abrir painel
+    // Se for um cachorro, salvar dados iniciais no localStorage e abrir painel
     if (artifactType.type === 'animal') {
       const initialData = {
         nome: animalName,
@@ -421,7 +421,7 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
         <MiniMap
           nodeColor={(node) => {
             switch (node.data.type) {
-              case 'granja':
+              case 'matilha':
                 return '#ff6b6b';
               case 'animal':
                 return '#4ecdc4';
