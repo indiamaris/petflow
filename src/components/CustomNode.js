@@ -1,15 +1,16 @@
-import React from 'react';
 import { Handle } from '@xyflow/react';
+import React from 'react';
 import './CustomNode.css';
 
 const CustomNode = ({ data, selected, id }) => {
-  const { label, type, animalName, color, shape } = data;
+  const { label, type, animalName, color, shape, highlightedNodes } = data;
   
   const getShapeStyle = () => {
+    const isHighlighted = highlightedNodes && highlightedNodes.has(id);
     const baseStyle = {
       backgroundColor: color,
-      border: selected ? '3px solid #61dafb' : '2px solid #fff',
-      boxShadow: selected ? '0 0 0 3px rgba(97, 218, 251, 0.3)' : '0 2px 8px rgba(0, 0, 0, 0.15)'
+      border: selected ? '3px solid #61dafb' : (isHighlighted ? '3px solid #ffd700' : '2px solid #fff'),
+      boxShadow: selected ? '0 0 0 3px rgba(97, 218, 251, 0.3)' : (isHighlighted ? '0 0 0 3px rgba(255, 215, 0, 0.5)' : '0 2px 8px rgba(0, 0, 0, 0.15)')
     };
 
     switch (shape) {
@@ -38,7 +39,7 @@ const CustomNode = ({ data, selected, id }) => {
   };
 
   return (
-    <div className={`custom-node ${type} ${selected ? 'selected' : ''}`}>
+    <div className={`custom-node ${type} ${selected ? 'selected' : ''} ${isHighlighted ? 'highlighted' : ''}`}>
       <Handle
         type="target"
         position="top"

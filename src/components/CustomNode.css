@@ -54,6 +54,12 @@
   transform: scale(1.05);
 }
 
+.custom-node.highlighted .node-content {
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+  filter: brightness(1.1);
+}
+
 .custom-node:hover .node-content {
   transform: scale(1.02);
 }

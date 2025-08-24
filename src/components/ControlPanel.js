@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './ControlPanel.css';
 import DataManager from './DataManager';
 
-const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick, onSaveSVG }) => {
+const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick, onGranjaHighlight, onSaveSVG }) => {
   const [expandedNodes, setExpandedNodes] = useState(new Set(['main']));
 
   const toggleNode = (nodeId) => {
@@ -50,6 +50,8 @@ const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick
             <button 
               className="granja-button"
               onClick={() => onGranjaClick(canvasId.replace('granja-', ''))}
+              onMouseEnter={() => onGranjaHighlight(canvasId.replace('granja-', ''))}
+              onMouseLeave={() => onGranjaHighlight(null)}
               title="Abrir Granja"
             >
               🏠
@@ -97,6 +99,8 @@ const ControlPanel = ({ canvases, currentCanvasId, onCanvasSelect, onGranjaClick
             <button 
               className="open-granja-btn"
               onClick={() => onGranjaClick(granja.id.replace('granja-', ''))}
+              onMouseEnter={() => onGranjaHighlight(granja.id.replace('granja-', ''))}
+              onMouseLeave={() => onGranjaHighlight(null)}
             >
               Abrir
             </button>

@@ -16,6 +16,7 @@ function App() {
       parentId: null
     }
   });
+  const [highlightedNodes, setHighlightedNodes] = useState(new Set());
 
   // Carregar dados salvos do localStorage na inicialização
   useEffect(() => {
@@ -88,6 +89,48 @@ function App() {
     }
     
     setCurrentCanvasId(newCanvasId);
+  };
+
+  const handleGranjaHighlight = (granjaId) => {
+    if (!granjaId) {
+      setHighlightedNodes(new Set());
+      return;
+    }
+    
+    // Encontrar todos os nós filhos da granja (conectados a ela)
+    const currentCanvas = canvases[currentCanvasId];
+    if (!currentCanvas) return;
+    
+    const nodesToHighlight = new Set();
+    nodesToHighlight.add(granjaId); // Adicionar a própria granja
+    
+    // Encontrar nós conectados diretamente à granja
+    currentCanvas.edges.forEach(edge => {
+      if (edge.source === granjaId) {
+        nodesToHighlight.add(edge.target);
+      }
+      if (edge.target === granjaId) {
+        nodesToHighlight.add(edge.source);
+      }
+    });
+    
+    // Encontrar nós conectados indiretamente (filhos dos filhos)
+    let hasChanges = true;
+    while (hasChanges) {
+      hasChanges = false;
+      currentCanvas.edges.forEach(edge => {
+        if (nodesToHighlight.has(edge.source) && !nodesToHighlight.has(edge.target)) {
+          nodesToHighlight.add(edge.target);
+          hasChanges = true;
+        }
+        if (nodesToHighlight.has(edge.target) && !nodesToHighlight.has(edge.source)) {
+          nodesToHighlight.add(edge.source);
+          hasChanges = true;
+        }
+      });
+    }
+    
+    setHighlightedNodes(nodesToHighlight);
   };
 
   const handleBackToMain = () => {
@@ -167,12 +210,14 @@ function App() {
           onGranjaClick={handleGranjaClick}
           onAnimalUpdate={handleAnimalUpdate}
           canvasId={currentCanvasId}
+          highlightedNodes={highlightedNodes}
         />
         <ControlPanel
           canvases={canvases}
           currentCanvasId={currentCanvasId}
           onCanvasSelect={setCurrentCanvasId}
           onGranjaClick={handleGranjaClick}
+          onGranjaHighlight={handleGranjaHighlight}
           onSaveSVG={() => handleSaveSVG(currentCanvasId)}
         />
       </div>

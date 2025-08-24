@@ -21,7 +21,7 @@ const nodeTypes = {
 };
 
 // Componente interno que usa useReactFlow
-function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, onGranjaClick, onAnimalUpdate, canvasId }) {
+function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, onGranjaClick, onAnimalUpdate, canvasId, highlightedNodes }) {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
@@ -398,7 +398,13 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
   return (
     <div className="flow-canvas" ref={reactFlowWrapper}>
       <ReactFlow
-        nodes={nodes}
+        nodes={nodes.map(node => ({
+          ...node,
+          data: {
+            ...node.data,
+            highlightedNodes: highlightedNodes
+          }
+        }))}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
