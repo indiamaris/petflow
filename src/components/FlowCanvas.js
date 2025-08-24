@@ -163,26 +163,55 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
           // Criar uma cópia do SVG
           const clonedSvg = svgElement.cloneNode(true);
           
-          // Ajustar o viewBox para incluir todos os nós
-          const bounds = reactFlowInstance.getNodes().reduce((bounds, node) => {
-            bounds.minX = Math.min(bounds.minX, node.position.x);
-            bounds.maxX = Math.max(bounds.maxX, node.position.x + 120);
-            bounds.minY = Math.min(bounds.minY, node.position.y);
-            bounds.maxY = Math.max(bounds.maxY, node.position.y + 80);
-            return bounds;
-          }, { minX: 0, maxX: 0, minY: 0, maxY: 0 });
+          // Calcular os limites reais do canvas
+          const canvasElement = reactFlowWrapper.current?.querySelector('.react-flow__viewport');
+          const canvasRect = canvasElement?.getBoundingClientRect();
           
-          // Adicionar padding
-          const padding = 50;
+          // Obter todos os nós e calcular bounds
+          const allNodes = reactFlowInstance.getNodes();
+          const allEdges = reactFlowInstance.getEdges();
+          
+          if (allNodes.length === 0) {
+            alert('Não há nós para exportar.');
+            return;
+          }
+          
+          // Calcular bounds dos nós
+          const bounds = allNodes.reduce((bounds, node) => {
+            const nodeWidth = node.data.type === 'granja' ? 120 : 100;
+            const nodeHeight = node.data.type === 'granja' ? 80 : 60;
+            
+            bounds.minX = Math.min(bounds.minX, node.position.x);
+            bounds.maxX = Math.max(bounds.maxX, node.position.x + nodeWidth);
+            bounds.minY = Math.min(bounds.minY, node.position.y);
+            bounds.maxY = Math.max(bounds.maxY, node.position.y + nodeHeight);
+            return bounds;
+          }, { 
+            minX: allNodes[0].position.x, 
+            maxX: allNodes[0].position.x, 
+            minY: allNodes[0].position.y, 
+            maxY: allNodes[0].position.y 
+          });
+          
+          // Adicionar padding generoso
+          const padding = 100;
           const width = bounds.maxX - bounds.minX + padding * 2;
           const height = bounds.maxY - bounds.minY + padding * 2;
           
-          clonedSvg.setAttribute('viewBox', `${bounds.minX - padding} ${bounds.minY - padding} ${width} ${height}`);
-          clonedSvg.setAttribute('width', width);
-          clonedSvg.setAttribute('height', height);
+          // Criar um novo SVG com o conteúdo correto
+          const newSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          newSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          newSvg.setAttribute('viewBox', `${bounds.minX - padding} ${bounds.minY - padding} ${width} ${height}`);
+          newSvg.setAttribute('width', width);
+          newSvg.setAttribute('height', height);
+          newSvg.setAttribute('style', 'background-color: #f8f9fa;');
+          
+          // Adicionar o conteúdo do SVG original
+          const svgContent = svgElement.innerHTML;
+          newSvg.innerHTML = svgContent;
           
           // Converter para string SVG
-          const svgData = new XMLSerializer().serializeToString(clonedSvg);
+          const svgData = new XMLSerializer().serializeToString(newSvg);
           const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
           
           // Criar link de download
