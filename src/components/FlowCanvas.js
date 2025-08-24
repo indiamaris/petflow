@@ -156,78 +156,138 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
   const handleSaveSVG = useCallback(() => {
     if (reactFlowInstance) {
       try {
-        // Obter o elemento SVG do React Flow
-        const svgElement = reactFlowWrapper.current?.querySelector('.react-flow__viewport svg');
+        // Obter todos os nós para calcular bounds
+        const allNodes = reactFlowInstance.getNodes();
         
-        if (svgElement) {
-          // Criar uma cópia do SVG
-          const clonedSvg = svgElement.cloneNode(true);
-          
-          // Calcular os limites reais do canvas
-          const canvasElement = reactFlowWrapper.current?.querySelector('.react-flow__viewport');
-          const canvasRect = canvasElement?.getBoundingClientRect();
-          
-          // Obter todos os nós e calcular bounds
-          const allNodes = reactFlowInstance.getNodes();
-          const allEdges = reactFlowInstance.getEdges();
-          
-          if (allNodes.length === 0) {
-            alert('Não há nós para exportar.');
-            return;
-          }
-          
-          // Calcular bounds dos nós
-          const bounds = allNodes.reduce((bounds, node) => {
-            const nodeWidth = node.data.type === 'granja' ? 120 : 100;
-            const nodeHeight = node.data.type === 'granja' ? 80 : 60;
-            
-            bounds.minX = Math.min(bounds.minX, node.position.x);
-            bounds.maxX = Math.max(bounds.maxX, node.position.x + nodeWidth);
-            bounds.minY = Math.min(bounds.minY, node.position.y);
-            bounds.maxY = Math.max(bounds.maxY, node.position.y + nodeHeight);
-            return bounds;
-          }, { 
-            minX: allNodes[0].position.x, 
-            maxX: allNodes[0].position.x, 
-            minY: allNodes[0].position.y, 
-            maxY: allNodes[0].position.y 
-          });
-          
-          // Adicionar padding generoso
-          const padding = 100;
-          const width = bounds.maxX - bounds.minX + padding * 2;
-          const height = bounds.maxY - bounds.minY + padding * 2;
-          
-          // Criar um novo SVG com o conteúdo correto
-          const newSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          newSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-          newSvg.setAttribute('viewBox', `${bounds.minX - padding} ${bounds.minY - padding} ${width} ${height}`);
-          newSvg.setAttribute('width', width);
-          newSvg.setAttribute('height', height);
-          newSvg.setAttribute('style', 'background-color: #f8f9fa;');
-          
-          // Adicionar o conteúdo do SVG original
-          const svgContent = svgElement.innerHTML;
-          newSvg.innerHTML = svgContent;
-          
-          // Converter para string SVG
-          const svgData = new XMLSerializer().serializeToString(newSvg);
-          const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-          
-          // Criar link de download
-          const url = URL.createObjectURL(svgBlob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `petflow_canvas_${canvasId}_${new Date().toISOString().split('T')[0]}.svg`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-          
-          alert('Canvas salvo como SVG com sucesso!');
-        } else {
-          alert('Erro: Não foi possível encontrar o elemento SVG.');
+        if (allNodes.length === 0) {
+          alert('Não há nós para exportar.');
+          return;
         }
+        
+        // Calcular bounds dos nós
+        const bounds = allNodes.reduce((bounds, node) => {
+          const nodeWidth = node.data.type === 'granja' ? 120 : 100;
+          const nodeHeight = node.data.type === 'granja' ? 80 : 60;
+          
+          bounds.minX = Math.min(bounds.minX, node.position.x);
+          bounds.maxX = Math.max(bounds.maxX, node.position.x + nodeWidth);
+          bounds.minY = Math.min(bounds.minY, node.position.y);
+          bounds.maxY = Math.max(bounds.maxY, node.position.y + nodeHeight);
+          return bounds;
+        }, { 
+          minX: allNodes[0].position.x, 
+          maxX: allNodes[0].position.x, 
+          minY: allNodes[0].position.y, 
+          maxY: allNodes[0].position.y 
+        });
+        
+        // Adicionar padding
+        const padding = 100;
+        const width = bounds.maxX - bounds.minX + padding * 2;
+        const height = bounds.maxY - bounds.minY + padding * 2;
+        
+        // Criar um novo SVG
+        const newSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        newSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        newSvg.setAttribute('viewBox', `${bounds.minX - padding} ${bounds.minY - padding} ${width} ${height}`);
+        newSvg.setAttribute('width', width);
+        newSvg.setAttribute('height', height);
+        newSvg.setAttribute('style', 'background-color: #f8f9fa;');
+        
+        // Adicionar background
+        const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        background.setAttribute('width', '100%');
+        background.setAttribute('height', '100%');
+        background.setAttribute('fill', '#f8f9fa');
+        newSvg.appendChild(background);
+        
+        // Adicionar nós como retângulos representativos
+        allNodes.forEach(node => {
+          const nodeElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          const nodeWidth = node.data.type === 'granja' ? 120 : 100;
+          const nodeHeight = node.data.type === 'granja' ? 80 : 60;
+          
+          nodeElement.setAttribute('x', node.position.x);
+          nodeElement.setAttribute('y', node.position.y);
+          nodeElement.setAttribute('width', nodeWidth);
+          nodeElement.setAttribute('height', nodeHeight);
+          nodeElement.setAttribute('fill', node.data.color || '#666');
+          nodeElement.setAttribute('stroke', '#333');
+          nodeElement.setAttribute('stroke-width', '2');
+          nodeElement.setAttribute('rx', '8');
+          
+          // Adicionar texto do nó
+          const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          textElement.setAttribute('x', node.position.x + nodeWidth / 2);
+          textElement.setAttribute('y', node.position.y + nodeHeight / 2 + 5);
+          textElement.setAttribute('text-anchor', 'middle');
+          textElement.setAttribute('fill', 'white');
+          textElement.setAttribute('font-size', '12');
+          textElement.setAttribute('font-weight', 'bold');
+          textElement.textContent = node.data.animalName || node.data.label;
+          
+          newSvg.appendChild(nodeElement);
+          newSvg.appendChild(textElement);
+        });
+        
+        // Adicionar conexões
+        const allEdges = reactFlowInstance.getEdges();
+        allEdges.forEach(edge => {
+          const sourceNode = allNodes.find(n => n.id === edge.source);
+          const targetNode = allNodes.find(n => n.id === edge.target);
+          
+          if (sourceNode && targetNode) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            const sourceX = sourceNode.position.x + (sourceNode.data.type === 'granja' ? 60 : 50);
+            const sourceY = sourceNode.position.y + (sourceNode.data.type === 'granja' ? 40 : 30);
+            const targetX = targetNode.position.x + (targetNode.data.type === 'granja' ? 60 : 50);
+            const targetY = targetNode.position.y + (targetNode.data.type === 'granja' ? 40 : 30);
+            
+            line.setAttribute('x1', sourceX);
+            line.setAttribute('y1', sourceY);
+            line.setAttribute('x2', targetX);
+            line.setAttribute('y2', targetY);
+            line.setAttribute('stroke', '#666');
+            line.setAttribute('stroke-width', '2');
+            line.setAttribute('marker-end', 'url(#arrowhead)');
+            
+            newSvg.appendChild(line);
+          }
+        });
+        
+        // Adicionar definição de seta
+        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+        marker.setAttribute('id', 'arrowhead');
+        marker.setAttribute('markerWidth', '10');
+        marker.setAttribute('markerHeight', '7');
+        marker.setAttribute('refX', '9');
+        marker.setAttribute('refY', '3.5');
+        marker.setAttribute('orient', 'auto');
+        
+        const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        polygon.setAttribute('points', '0 0, 10 3.5, 0 7');
+        polygon.setAttribute('fill', '#666');
+        
+        marker.appendChild(polygon);
+        defs.appendChild(marker);
+        newSvg.appendChild(defs);
+        
+        // Converter para string SVG
+        const svgData = new XMLSerializer().serializeToString(newSvg);
+        const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+        
+        // Criar link de download
+        const url = URL.createObjectURL(svgBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `petflow_canvas_${canvasId}_${new Date().toISOString().split('T')[0]}.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        alert('Canvas salvo como SVG com sucesso!');
       } catch (error) {
         console.error('Erro ao salvar SVG:', error);
         alert('Erro ao salvar SVG. Tente novamente.');
