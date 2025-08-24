@@ -100,38 +100,26 @@ function App() {
       return;
     }
     
-    // Encontrar todos os nós filhos da matilha (conectados a ela)
+    // Encontrar apenas os nós filhos da matilha (hierarquia descendente)
     const currentCanvas = canvases[currentCanvasId];
     if (!currentCanvas) return;
     
     const nodesToHighlight = new Set();
     nodesToHighlight.add(matilhaId); // Adicionar a própria matilha
     
-    // Encontrar nós conectados diretamente à matilha
-    currentCanvas.edges.forEach(edge => {
-      if (edge.source === matilhaId) {
-        nodesToHighlight.add(edge.target);
-      }
-      if (edge.target === matilhaId) {
-        nodesToHighlight.add(edge.source);
-      }
-    });
-    
-    // Encontrar nós conectados indiretamente (filhos dos filhos)
-    let hasChanges = true;
-    while (hasChanges) {
-      hasChanges = false;
+    // Função recursiva para encontrar apenas os filhos (não os pais)
+    const findChildren = (parentId) => {
       currentCanvas.edges.forEach(edge => {
-        if (nodesToHighlight.has(edge.source) && !nodesToHighlight.has(edge.target)) {
+        // Só adicionar se o edge vai DO pai PARA o filho (hierarquia descendente)
+        if (edge.source === parentId && !nodesToHighlight.has(edge.target)) {
           nodesToHighlight.add(edge.target);
-          hasChanges = true;
-        }
-        if (nodesToHighlight.has(edge.target) && !nodesToHighlight.has(edge.source)) {
-          nodesToHighlight.add(edge.source);
-          hasChanges = true;
+          findChildren(edge.target); // Recursivamente encontrar filhos dos filhos
         }
       });
-    }
+    };
+    
+    // Encontrar todos os filhos da matilha
+    findChildren(matilhaId);
     
     setHighlightedNodes(nodesToHighlight);
   };

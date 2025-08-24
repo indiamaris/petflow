@@ -438,6 +438,7 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
           }
         }))}
         edges={edges.map(edge => {
+          // Destacar apenas edges entre nós destacados (hierarquia descendente)
           const isHighlighted = highlightedNodes && 
             highlightedNodes.has(edge.source) && 
             highlightedNodes.has(edge.target);
