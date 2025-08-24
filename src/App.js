@@ -191,6 +191,11 @@ function App() {
 
   const currentCanvas = canvases[currentCanvasId];
 
+  // Verificar se o canvas atual existe
+  if (!currentCanvas) {
+    return <div>Carregando...</div>;
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -212,6 +217,8 @@ function App() {
           canvasId={currentCanvasId}
           highlightedNodes={highlightedNodes}
         />
+        {/* Debug */}
+        {console.log('App - highlightedNodes:', highlightedNodes)}
         <ControlPanel
           canvases={canvases}
           currentCanvasId={currentCanvasId}

@@ -6,7 +6,10 @@ const CustomNode = ({ data, selected, id }) => {
   const { label, type, animalName, color, shape, highlightedNodes } = data;
   
   // Verificar se o nó está destacado
-  const isHighlighted = highlightedNodes && highlightedNodes.has(id);
+  const isHighlighted = highlightedNodes && 
+    typeof highlightedNodes === 'object' && 
+    typeof highlightedNodes.has === 'function' && 
+    highlightedNodes.has(id);
   
   const getShapeStyle = () => {
     const baseStyle = {

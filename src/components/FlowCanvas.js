@@ -22,6 +22,9 @@ const nodeTypes = {
 
 // Componente interno que usa useReactFlow
 function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, onMatilhaClick, onAnimalUpdate, canvasId, highlightedNodes }) {
+  // Debug: verificar se highlightedNodes está sendo passado
+  console.log('FlowCanvasInner - highlightedNodes:', highlightedNodes);
+  console.log('FlowCanvasInner - typeof highlightedNodes:', typeof highlightedNodes);
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
@@ -103,12 +106,8 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
     });
   }, []);
 
-  // Atualizar o estado global quando os nós ou edges mudarem
-  useEffect(() => {
-    if (onUpdate) {
-      onUpdate(nodes, edges);
-    }
-  }, [nodes, edges, onUpdate]);
+  // Removido useEffect que causava loop infinito
+  // onUpdate é chamado manualmente quando necessário
 
   // Sincronizar com as mudanças externas apenas na primeira renderização
   useEffect(() => {
@@ -368,6 +367,7 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
 
     // Adicionar o novo nó e edge
     setNodes(prevNodes => [...prevNodes, newNode]);
+    
     if (newEdge) {
       setEdges(prevEdges => [...prevEdges, newEdge]);
     }
@@ -402,7 +402,7 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
           ...node,
           data: {
             ...node.data,
-            highlightedNodes: highlightedNodes
+            highlightedNodes: highlightedNodes && typeof highlightedNodes === 'object' ? highlightedNodes : new Set()
           }
         }))}
         edges={edges}
