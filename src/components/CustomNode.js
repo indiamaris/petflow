@@ -2,7 +2,7 @@ import { Handle } from '@xyflow/react';
 import React from 'react';
 import './CustomNode.css';
 
-const CustomNode = ({ data, selected, id }) => {
+const CustomNode = ({ data, selected, id, onDelete }) => {
   const { label, type, animalName, color, shape, highlightedNodes } = data;
   
   // Verificar se o nó está destacado
@@ -59,6 +59,21 @@ const CustomNode = ({ data, selected, id }) => {
           <div className="animal-type" style={getLabelStyle()}>
             {label}
           </div>
+        )}
+        
+        {selected && type !== 'matilha' && (
+          <button 
+            className="delete-node-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onDelete && window.confirm(`Tem certeza que deseja deletar o cachorro "${animalName || label}"?`)) {
+                onDelete(id);
+              }
+            }}
+            title="Deletar cachorro"
+          >
+            ×
+          </button>
         )}
       </div>
       

@@ -8,7 +8,7 @@ import {
     useReactFlow
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FLOW_CONFIG } from '../config/flow-config';
 import { saveAnimalData } from '../utils/storage-utils';
 import AnimalDetailsPanel from './AnimalDetailsPanel';
@@ -16,9 +16,7 @@ import ContextMenu from './ContextMenu';
 import CustomNode from './CustomNode';
 import './FlowCanvas.css';
 
-const nodeTypes = {
-  custom: CustomNode
-};
+// Remover o wrapper estático
 
 // Componente interno que usa useReactFlow
 function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, onMatilhaClick, onAnimalUpdate, canvasId, highlightedNodes }) {
@@ -151,6 +149,40 @@ function FlowCanvasInner({ nodes: initialNodes, edges: initialEdges, onUpdate, o
   const handleCloseContextMenu = useCallback(() => {
     setContextMenu({ show: false, position: null, sourceNode: null });
   }, []);
+
+  const handleDeleteNode = useCallback((nodeId) => {
+    // Remover o nó do estado local
+    setNodes(prevNodes => {
+      const updatedNodes = prevNodes.filter(node => node.id !== nodeId);
+      
+      // Remover todas as edges conectadas a este nó
+      setEdges(prevEdges => {
+        const updatedEdges = prevEdges.filter(edge => 
+          edge.source !== nodeId && edge.target !== nodeId
+        );
+        
+        // Atualizar o estado global
+        if (onUpdate) {
+          onUpdate(updatedNodes, updatedEdges);
+        }
+        
+        return updatedEdges;
+      });
+      
+      return updatedNodes;
+    });
+    
+    // Fechar painel de detalhes se o nó deletado era o selecionado
+    if (selectedAnimal && selectedAnimal.id === nodeId) {
+      setIsDetailsPanelOpen(false);
+      setSelectedAnimal(null);
+    }
+  }, [onUpdate, selectedAnimal]);
+
+  // Criar nodeTypes dinamicamente com a função de deletar
+  const nodeTypes = useMemo(() => ({
+    custom: (props) => <CustomNode {...props} onDelete={handleDeleteNode} />
+  }), [handleDeleteNode]);
 
   const handleSaveSVG = useCallback(() => {
     if (reactFlowInstance) {
